@@ -1,32 +1,32 @@
 version: '3'
 
 services:
-  proxy:
-    container_name: proxy
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./nginx/production:/etc/nginx/conf.d
-      - ./nginx/production/certbot/conf:/etc/letsencrypt
-      - ./nginx/production/certbot/www:/var/www/certbot
-    networks:
-      - web
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-  certbot:
-    container_name: certbot
-    image: certbot/certbot
-    restart: unless-stopped
-    volumes:
-      - ./nginx/production/certbot/conf:/etc/letsencrypt
-      - ./nginx/production/certbot/www:/var/www/certbot
-    networks:
-      - web
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  # proxy:
+  #   container_name: proxy
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - ./nginx/production:/etc/nginx/conf.d
+  #     - ./nginx/production/certbot/conf:/etc/letsencrypt
+  #     - ./nginx/production/certbot/www:/var/www/certbot
+  #   networks:
+  #     - web
+  #   command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+  # certbot:
+  #   container_name: certbot
+  #   image: certbot/certbot
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./nginx/production/certbot/conf:/etc/letsencrypt
+  #     - ./nginx/production/certbot/www:/var/www/certbot
+  #   networks:
+  #     - web
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   postgres:
     container_name: postgres
     image: postgres:10.8
@@ -83,3 +83,5 @@ volumes:
 networks:
   internal:
   web:
+    external:
+      name: nginx_web
