@@ -1,0 +1,85 @@
+version: '3'
+
+services:
+  proxy:
+    container_name: proxy
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/production:/etc/nginx/conf.d
+      - ./nginx/production/certbot/conf:/etc/letsencrypt
+      - ./nginx/production/certbot/www:/var/www/certbot
+    networks:
+      - web
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./nginx/production/certbot/conf:/etc/letsencrypt
+      - ./nginx/production/certbot/www:/var/www/certbot
+    networks:
+      - web
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  postgres:
+    container_name: postgres
+    image: postgres:10.8
+    restart: always
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: 'pguser'
+      POSTGRES_PASSWORD: 'pguserpass'
+      POSTGRES_DB: 'dotnetcoredocker'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - internal
+  api:
+    container_name: api
+    build:
+      context: ./core
+      dockerfile: Dockerfile
+    restart: always
+    expose:
+      - 80
+    environment:
+      ASPNETCORE_ENVIRONMENT: 'Production'
+      DB_CONNECTION_STRING: 'Server=postgres;Port=5432;Database=dotnetcoredocker;User Id=pguser;Password=pguserpass'
+      TOKEN_HTTPS_META: 'true'
+      TOKEN_AUDIENCE: 'https://dotnetcoredocker.com'
+      TOKEN_ISSUER: 'https://api.dotnetcoredocker.com'
+    depends_on:
+      - postgres
+    networks:
+      - internal
+      - web
+  nuxt:
+    container_name: nuxt
+    build:
+      context: ./nuxt
+      dockerfile: Dockerfile
+    restart: always
+    expose:
+      - 3000
+    environment:
+      HOST: 0.0.0.0
+    command: 'npm run start'
+    depends_on:
+      - api
+    networks:
+      - web
+
+volumes:
+  pgdata:
+
+networks:
+  internal:
+  web:

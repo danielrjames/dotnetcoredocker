@@ -1,0 +1,162 @@
+body {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  background-color: #f8f9fd;
+  color: #394165;
+}
+
+.body-content {
+  display: block;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-bottom: 80px;
+}
+
+.navbar {
+  border-radius: 0 !important;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 5px 0;
+  font-size: 13px;
+  background-color: #fff;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.navbar-brand {
+  color: #394165 !important;
+}
+
+.navbar a {
+  color: #959595;
+  /* font-weight: 700; */
+  border: none;
+}
+
+.nav-link.active {
+  color: #394165 !important;
+}
+
+.nav > li > a:focus,
+.nav > li > a:hover {
+  background: none !important;
+}
+
+.logout {
+  background-color: transparent;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  /* color: #959595; */
+  padding: 15px;
+  line-height: 20px;
+}
+
+.logout:active,
+.logout:focus {
+  outline: none;
+}
+
+.has-error .control-label,
+.has-error .checkbox,
+.has-error .checkbox-inline,
+.has-error .radio,
+.has-error .radio-inline {
+  color: #dd6565;
+}
+
+.has-error .form-control {
+  color: #dd6565;
+  border: 1px solid #dd6565;
+}
+
+.has-error .form-control:focus {
+  border-color: #dd6565;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
+}
+
+.text-danger {
+  color: #dd6565;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: 40px;
+  padding: 6px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #394165;
+  border: 1px solid #e5e5e5;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: none;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+.form-control::-ms-clear {
+  display: none;
+}
+
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] {
+  background-color: #e5e5e5;
+  opacity: 0.65;
+  color: #e5e5e5;
+}
+
+.form-control[disabled]::placeholder {
+  color: #e5e5e5;
+}
+
+.validation-messages-wrapper {
+  position: relative;
+}
+
+.validation-messages {
+  position: absolute;
+  width: 100%;
+  margin: 3px 1px 5px;
+  font-size: 12px;
+}
+
+.btn {
+  margin: 10px auto;
+  padding: 9px 15px;
+  height: 40px;
+  border-radius: 4px;
+  line-height: 1.42857143;
+  vertical-align: middle;
+}
+/* .btn:active {
+  color: #333;
+  background-color: #e6e6e6;
+  background-image: none;
+  border-color: #adadad;
+} */
+
+.btn-default {
+  background-color: #15cd72;
+  border-color: #13ac5f;
+  color: #fff;
+}
+.btn-default:active,
+.btn-default:focus,
+.btn-default:hover,
+.btn-default:active:focus {
+  background-color: #12aa5e;
+  border-color: #119151;
+  color: #fff;
+  outline: none !important;
+  box-shadow: none;
+}
