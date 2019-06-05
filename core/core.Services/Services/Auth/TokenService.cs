@@ -131,7 +131,8 @@ namespace core.Services.Services.Auth
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUniversalTime().ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
                 new Claim("rExp", new DateTimeOffset(now).ToUniversalTime().Add(refreshExpiration).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
-                new Claim("name", user.Name, ClaimValueTypes.String)
+                new Claim("name", user.Name, ClaimValueTypes.String),
+                new Claim("submitStatus", user.Submitted.ToString(), ClaimValueTypes.Boolean)
         };
 
             var token = new JwtSecurityToken(

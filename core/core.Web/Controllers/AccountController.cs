@@ -21,7 +21,6 @@ namespace core.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly IUserService _userService;
-        private readonly ITextService _textService;
         private readonly ILogger<AccountController> _logger;
 
         public AccountController(
@@ -29,14 +28,12 @@ namespace core.Web.Controllers
             SignInManager<ApplicationUser> signInManager,
             ITokenService tokenService,
             IUserService userService,
-            ITextService textService,
             ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
             _userService = userService;
-            _textService = textService;
             _logger = logger;
         }
 
