@@ -12,8 +12,8 @@ data_path="./nginx/$1/certbot"
 email="$2" # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
-echo "### Starting base app ..."
-docker-compose -f docker-compose.$1.yml up --force-recreate -d
+echo "### Starting base containers b4 nginx ..."
+sudo docker-compose -f docker-compose.$1.yml up --force-recreate -d
 echo
 
 if [ -d "$data_path/conf/live/" ]; then
