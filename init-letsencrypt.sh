@@ -12,7 +12,6 @@ data_path="./nginx/$1/certbot"
 email="$2" # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
-
 if [ -d "$data_path/conf/live/" ]; then
   read -p "Existing data found. Continue and replace existing certificates? (y/N) " decision
   if [ "$decision" != "Y" ] && [ "$decision" != "y" ]; then
@@ -22,16 +21,14 @@ fi
 
 if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/ssl-dhparams.pem" ]; then
   echo "### Downloading recommended TLS parameters ..."
-  mkdir -p "$data_path/conf"
-  # don't need the below because using mozilla's ssl config
-  # curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/options-ssl-nginx.conf > "$data_path/conf/options-ssl-nginx.conf"
-  curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/ssl-dhparams.pem > "$data_path/conf/ssl-dhparams.pem"
+  sudo mkdir -p "$data_path/conf"
+  openssl dhparam -out "$data_path/conf/ssl-dhparams.pem" 2048
   echo
 fi
 
 for domain in "${domains[@]}"; do
   echo "### Removing old certificate for $domain ..."
-  docker-compose -f docker-compose.$1.yml run --rm --entrypoint "\
+  sudo docker-compose -f ./nginx/docker-compose.$1.yml run --rm --entrypoint "\
     rm -Rf /etc/letsencrypt/live/$domain && \
     rm -Rf /etc/letsencrypt/archive/$domain && \
     rm -Rf /etc/letsencrypt/renewal/$domain.conf" certbot
@@ -42,7 +39,7 @@ for domain in "${domains[@]}"; do
   echo "### Creating dummy certificate for $domain ..."
   path="/etc/letsencrypt/live/$domain"
   mkdir -p "$data_path/conf/live/$domain"
-  docker-compose -f docker-compose.$1.yml run --rm --entrypoint "\
+  sudo docker-compose -f ./nginx/docker-compose.$1.yml run --rm --entrypoint "\
     openssl req -x509 -nodes -newkey rsa:1024 -days 1\
       -keyout "$path/privkey.pem" \
       -out "$path/fullchain.pem" \
@@ -51,12 +48,12 @@ for domain in "${domains[@]}"; do
 done
 
 echo "### Starting nginx ..."
-docker-compose -f docker-compose.$1.yml up --force-recreate -d
+sudo docker-compose -f ./nginx/docker-compose.$1.yml up --force-recreate -d
 echo
 
 for domain in "${domains[@]}"; do
   echo "### Removing dummy certificate for $domain ..."
-  docker-compose -f docker-compose.$1.yml run --rm --entrypoint "\
+  sudo docker-compose -f ./nginx/docker-compose.$1.yml run --rm --entrypoint "\
     rm -Rf /etc/letsencrypt/live/$domain" certbot
   echo
 done
@@ -73,7 +70,7 @@ esac
 if [ $staging != "0" ]; then staging_arg="--staging"; fi
 
 for domain in "${domains[@]}"; do
-  docker-compose -f docker-compose.$1.yml run --rm --entrypoint "\
+  sudo docker-compose -f ./nginx/docker-compose.$1.yml run --rm --entrypoint "\
     certbot certonly --webroot -w /var/www/certbot \
       $staging_arg \
       $email_arg \
@@ -85,4 +82,4 @@ for domain in "${domains[@]}"; do
 done
 
 echo "### Reloading nginx ..."
-docker-compose -f docker-compose.$1.yml exec proxy nginx -s reload
+sudo docker-compose -f ./nginx/docker-compose.$1.yml exec proxy nginx -s reload
