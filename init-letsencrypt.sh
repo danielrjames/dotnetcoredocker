@@ -12,7 +12,11 @@ data_path="./nginx/$1/certbot"
 email="$2" # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
-echo "### Starting base containers b4 nginx ..."
+echo "### Creating nginx_web network ..."
+sudo docker network create nginx_web
+echo
+
+echo "### Starting base containers ..."
 sudo docker-compose -f docker-compose.$1.yml up --force-recreate -d
 echo
 
