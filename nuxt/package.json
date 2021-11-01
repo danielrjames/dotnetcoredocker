@@ -15,7 +15,7 @@
     "cookie-universal-nuxt": "^2.0.14",
     "cross-env": "^5.2.0",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.21",
     "nuxt": "^2.0.0"
   },
   "devDependencies": {
