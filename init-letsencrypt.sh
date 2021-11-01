@@ -30,7 +30,7 @@ fi
 if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/ssl-dhparams.pem" ]; then
   echo "### Downloading recommended TLS parameters ..."
   sudo mkdir -p "$data_path/conf"
-  openssl dhparam -out "$data_path/conf/ssl-dhparams.pem" 2048
+  openssl dhparam -out $data_path/conf/ssl-dhparams.pem 2048
   echo
 fi
 
@@ -48,7 +48,7 @@ for domain in "${domains[@]}"; do
   path="/etc/letsencrypt/live/$domain"
   mkdir -p "$data_path/conf/live/$domain"
   sudo docker-compose -f ./nginx/docker-compose.$1.yml run --rm --entrypoint "\
-    openssl req -x509 -nodes -newkey rsa:1024 -days 1\
+    openssl req -x509 -nodes -newkey rsa:2048 -days 1\
       -keyout "$path/privkey.pem" \
       -out "$path/fullchain.pem" \
       -subj '/CN=localhost'" certbot
